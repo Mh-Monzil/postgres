@@ -116,10 +116,41 @@ SELECT name,email, SUM(amount) as total_amount, COUNT(*) FROM orders
   HAVING COUNT(*) > 2;
 
 
-SELECT EXTRACT(MONTH FROM order_date) as month, COUNT(*) FROM orders
-  JOIN customers USING (customer_id)
+SELECT EXTRACT(MONTH FROM order_date) as month, SUM(amount) FROM orders
   WHERE EXTRACT(YEAR FROM order_date) = 2022
   GROUP BY month;
 
 
 
+
+UPDATE students2
+  SET last_login = '2025-05-15'
+  WHERE id = 3;
+
+SELECT * FROM students2
+  WHERE last_login >= CURRENT_DATE - INTERVAL '30 day';
+
+SELECT EXTRACT(month from last_login) as month, COUNT(*) AS total_students FROM students2
+  GROUP BY month;
+
+
+
+ALTER TABLE students2
+ADD COLUMN department_id INT;
+
+ALTER TABLE students2
+  ADD CONSTRAINT department_id 
+  FOREIGN KEY (department_id)
+  REFERENCES departments(department_id) ;
+
+  INSERT INTO students2 VALUES
+    (5, 5, 'John Doe', 20, 'CSE', 85, 'active', '2022-01-01', NULL, 10)
+
+  DELETE FROM students2
+    WHERE id = 5
+
+
+
+SELECT * FROM students2
+
+SELECT * FROM departments;
