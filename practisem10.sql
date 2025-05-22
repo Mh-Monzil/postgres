@@ -33,6 +33,8 @@ INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES
   (3, 'Data Structures', '2025-03-20'),
   (4, 'Business Ethics', '2025-04-25');
 
+-- Query & Subqueries
+
   SELECT AVG(score) AS avg_score FROM students10;
   -- avg score
 
@@ -61,8 +63,30 @@ INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES
     WHERE s.department_id = d.id
     HAVING MAX(s.score) > 90
   );
+  --Retrieve departments with at least one student scoring above 90 (use EXISTS).
 
   
+  -- Views 
+
+  CREATE VIEW student_score_with_dept
+  AS
+  SELECT s.name as student_name, d.name as department, score FROM students10 s
+  JOIN departments10 d ON s.department_id = d.id;
+
+  SELECT * FROM student_score_with_dept;
+  -- Create a view to show each student’s name, department, and score.
+
+
+  CREATE VIEW student_enrollments 
+  AS
+  SELECT name, course_title, enrolled_on FROM students10
+    JOIN enrollments10 ON students10.id = enrollments10.student_id
+
+  SELECT * FROM student_enrollments;
+  -- Create a view that lists all students enrolled in any course with the enrollment date.
+
+
+
 
 SELECT * FROM departments10;
 SELECT * FROM students10;
