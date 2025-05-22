@@ -25,10 +25,7 @@ INSERT INTO departments10 (name) VALUES
   ('BBA');
 
 INSERT INTO students10 (name, age, score, department_id) VALUES 
-  ('John Doe', 20, 85.5, 1),
-  ('Jane Smith', 22, 92.3, 2),
-  ('Alice Johnson', 21, 78.9, 3),
-  ('Bob Brown', 19, 88.7, 4);
+  ('John Doe Smith', 20, 85.5, 1);
 
 INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES 
   (1, 'Database Systems', '2025-01-10'),
@@ -42,6 +39,30 @@ INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES
   SELECT * FROM students10
     WHERE score > (SELECT AVG(score) FROM students10);
     -- students who scored above average score
+
+  SELECT * FROM students10
+    WHERE age > (SELECT AVG(age) FROM students10);
+      -- students whose age are above average age
+
+  SELECT name FROM students10
+    WHERE id IN (
+      SELECT student_id FROM enrollments10
+    );
+    --Get names of students who are enrolled in any course (use IN with subquery).
+
+  SELECT name FROM students10
+    WHERE id NOT IN (
+      SELECT student_id FROM enrollments10
+    );
+
+  SELECT d.name AS department_name FROM departments10 d
+  WHERE EXISTS (
+    SELECT 1 FROM students10 s
+    WHERE s.department_id = d.id
+    HAVING MAX(s.score) > 90
+  );
+
+  
 
 SELECT * FROM departments10;
 SELECT * FROM students10;
