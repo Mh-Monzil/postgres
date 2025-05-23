@@ -25,13 +25,10 @@ INSERT INTO departments10 (name) VALUES
   ('BBA');
 
 INSERT INTO students10 (name, age, score, department_id) VALUES 
-  ('John Doe Smith', 20, 85.5, 1);
+  ('Charlie Davis', 23, 88, 1);
 
 INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES 
-  (1, 'Database Systems', '2025-01-10'),
-  (2, 'Operating Systems', '2025-02-15'),
-  (3, 'Data Structures', '2025-03-20'),
-  (4, 'Business Ethics', '2025-04-25');
+  (7, 'Database Systems', '2025-05-23')
 
 -- Query & Subqueries
 
@@ -148,6 +145,45 @@ INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES
 
   CALL remove_unenrolled_students();
 
+
+  -- Triggers
+
+  CREATE TABLE enrollment_logs(
+    log_id SERIAL PRIMARY KEY,
+    student_id INT,
+    course_title VARCHAR(100),
+    logged_at TIMESTAMP DEFAULT NOW()
+  );
+
+  CREATE OR REPLACE FUNCTION log_enrollment()
+  RETURNS TRIGGER
+  LANGUAGE PLPGSQL
+  AS $$
+    BEGIN
+      INSERT INTO enrollment_logs(student_id, course_title) VALUES (NEW.student_id, NEW.course_title);
+
+      -- RAISE NOTICE 'Inserted: student_id=%, course_title=%, enrolled_on=%', NEW.student_id, NEW.course_title, NEW.enrolled_on;
+
+      RETURN NEW;
+    END
+  $$;
+
+  DROP FUNCTION log_enrollment();
+
+
+  CREATE TRIGGER enrollment_logs_trigger
+  AFTER INSERT
+  ON enrollments10
+  FOR EACH ROW
+  EXECUTE FUNCTION log_enrollment();
+
+  DROP TRIGGER enrollment_logs_trigger ON enrollments10;
+
+  INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES 
+  (7, 'Database Systems', '2025-05-23');
+
+
+  SELECT * FROM enrollment_logs;
 
 
 SELECT * FROM departments10;
