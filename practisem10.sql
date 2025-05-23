@@ -120,6 +120,34 @@ INSERT INTO enrollments10 (student_id, course_title, enrolled_on) VALUES
   SELECT * FROM get_name_dept();
 
 
+  -- Procedures
+
+
+  CREATE PROCEDURE update_dept()
+  LANGUAGE PLPGSQL
+  AS $$
+  BEGIN
+    UPDATE students10
+    SET department_id = 2
+    WHERE id = 1;
+  END
+  $$
+
+  CALL update_dept();
+
+  CREATE PROCEDURE remove_unenrolled_students()
+  LANGUAGE PLPGSQL
+  AS $$
+  BEGIN
+    DELETE FROM students10
+    WHERE id NOT IN (
+      SELECT student_id FROM enrollments10
+    );
+  END
+  $$
+
+  CALL remove_unenrolled_students();
+
 
 
 SELECT * FROM departments10;
